@@ -1,7 +1,8 @@
 package ijinxin.tutorial;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -10,7 +11,8 @@ import java.net.URI;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/bookmarks/{userId}")
+@RequestMapping("api/bookmarks")
+@Api(description = "BookmarkRestController")
 public class BookmarkRestController {
     private final BookmarkRepository bookmarkRepository;
     private final AccountRepository accountRepository;
@@ -24,13 +26,15 @@ public class BookmarkRestController {
     
 
     @GetMapping
-    Collection<Bookmark> readBookmarks(@PathVariable String userId) {
+    @ApiOperation("readBookmarks")
+    Collection<Bookmark> readBookmarks(String userId) {
         this.validateUser(userId);
         return this.bookmarkRepository
                 .findByAccountUsername(userId);
     }
 
     @PostMapping
+    @ApiOperation("add")
     ResponseEntity<?> add(@PathVariable String userId, @RequestBody Bookmark input) {
         this.validateUser(userId);
         return this.accountRepository
@@ -51,6 +55,7 @@ public class BookmarkRestController {
 
 
     @GetMapping("/{bookmarkId}")
+    @ApiOperation("readBookmark")
     Bookmark readBookmark(@PathVariable String userId, @PathVariable Long bookmarkId) {
         this.validateUser(userId);
 
